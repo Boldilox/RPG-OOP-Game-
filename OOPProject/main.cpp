@@ -33,8 +33,8 @@ int main(int argc, char* args[]) {
     Knight knight(0, 0, knightTexture); // Initial position (0, 0) - adjust as needed
 
     // Assuming the knight spawns on the left side of the first platform
-    float knightInitialX = 0; // Adjust as needed
-    float knightInitialY = 528; // Adjust as needed
+    float knightInitialX = platforms[0].getX(); // Adjust as needed
+    float knightInitialY = platforms[0].getY() - knight.getCurrentFrame().h+64; // Adjust as needed
 
     knight.setPosition(knightInitialX, knightInitialY); // Set knight's position
 
@@ -50,11 +50,16 @@ int main(int argc, char* args[]) {
 
         const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
         if (currentKeyStates[SDL_SCANCODE_LEFT]) {
-            knight.moveLeft(); // Move the knight left based on your implementation
+            knight.moveLeft(); // Move the knight left based implementation
         }
         if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
-            knight.moveRight(); // Move the knight right based on your implementation
+            knight.moveRight(); // Move the knight right based implementation
         }
+        if (currentKeyStates[SDL_SCANCODE_UP]){
+            knight.jump();
+        }
+        
+        knight.applyGravity(platforms);
 
         window.clear();
 

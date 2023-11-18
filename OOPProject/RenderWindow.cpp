@@ -48,8 +48,9 @@ void RenderWindow::render(Entity& p_entity) {
 
     // If the entity is the knight, scale its size.
     if (dynamic_cast<Knight*>(&p_entity) != nullptr) {
-        dst.w = src.w / 2; // Adjust scale factor as needed for the knight as it is too big per say.
-        dst.h = src.h / 2;
+        dst.w = 64; // Adjust scale factor as needed for the knight as it is too big per say.
+        dst.h = 64;
+        dst.y +=(128-dst.h);
     } else {
         dst.w = src.w;
         dst.h = src.h;
