@@ -2,7 +2,7 @@
 #include "Knight.hpp"
 
 Knight::Knight(float p_x, float p_y, SDL_Texture* p_tex) : Entity(p_x, p_y, p_tex) {
-    movementSpeed = 0.2f;
+    movementSpeed = 5.0f;
     isJumping = false;
     velocityY=0.0f;
 }
@@ -29,9 +29,10 @@ void Knight::jump(){
 
 void Knight::applyGravity(std::vector<Entity>& platforms){
     if(y<592){//592 is the ground starting y value
-        velocityY += 0.5f;//gravity force
+        velocityY += 0.6f;//gravity force
         y+=velocityY; 
 
+        bool collidedWithPlatform = false;
         //collision detection        
         for(int i = 0;i<platforms.size();i++){
             if(y + getCurrentFrame().h > platforms[i].getY()&&
@@ -42,6 +43,9 @@ void Knight::applyGravity(std::vector<Entity>& platforms){
                 y =platforms[i].getY() - getCurrentFrame().h;
                 isJumping = false; //reset jumping flag
                 velocityY = 0.0f;//vertical velocity set to none again
+                collidedWithPlatform = true;
+               
+
                }
         } 
     }
