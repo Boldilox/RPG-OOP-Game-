@@ -16,9 +16,13 @@ int main(int argc, char* args[]) {
     }
 
     RenderWindow window("Game", 1280, 720);
+    
 
     SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
+    //NEED TO IMPLEMENT BUSHES FOR ENEMY
+    //NEED TO IMPLEMENT ENEMY VARIABLE SO I CAN CALL THAT IN COMBAT SYSTEM
+    //make health while you are at it as well future ayaan :)
 
     std::vector<Entity> platforms;
     int x = 0;
@@ -40,7 +44,9 @@ int main(int argc, char* args[]) {
 
     bool gameRunning = true;
     SDL_Event event;
-
+    bool isInCombat=false;
+    bool CombatRunning = false;
+    
     while (gameRunning) {
         SDL_Delay(15);
         while (SDL_PollEvent(&event)) {
@@ -48,21 +54,46 @@ int main(int argc, char* args[]) {
                 gameRunning = false;
             }
         }
-
+       
+    
         const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-        if (currentKeyStates[SDL_SCANCODE_LEFT]) {
+        if (currentKeyStates[SDL_SCANCODE_A]) {
             knight.moveLeft(); // Move the knight left based implementation
         }
-        if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
+        if (currentKeyStates[SDL_SCANCODE_D]) {
             knight.moveRight(); // Move the knight right based implementation
         }
-        if (currentKeyStates[SDL_SCANCODE_UP]){
+        if (currentKeyStates[SDL_SCANCODE_W]){
             knight.jump();
         }
         
         knight.applyGravity(platforms);
+        
 
         window.clear();
+
+        if (currentKeyStates[SDL_SCANCODE_K]) {
+            isInCombat = true;
+
+            // Open combat window
+            RenderWindow combatWindow("Combat", 800, 450);
+            bool combatRunning = true;
+            SDL_Event combatEvent;
+
+            while (combatRunning) {
+                while (SDL_PollEvent(&combatEvent)) {
+                    if (combatEvent.type == SDL_QUIT) {
+                        combatRunning = false;
+                        isInCombat = false;
+                    }
+                }
+
+                combatWindow.clear();
+                combatWindow.display();
+            }
+
+            combatWindow.cleanUp();
+        }
 
         for (int i = 0; i < 10; i++) {
             window.render(platforms[i]);
