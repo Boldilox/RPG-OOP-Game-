@@ -32,7 +32,7 @@ void Knight::applyGravity(std::vector<Entity>& platforms){
         velocityY += 0.6f;//gravity force
         y+=velocityY; 
 
-        bool collidedWithPlatform = false;
+        
         //collision detection        
         for(int i = 0;i<platforms.size();i++){
             if(y + getCurrentFrame().h > platforms[i].getY()&&
@@ -43,7 +43,7 @@ void Knight::applyGravity(std::vector<Entity>& platforms){
                 y =platforms[i].getY() - getCurrentFrame().h;
                 isJumping = false; //reset jumping flag
                 velocityY = 0.0f;//vertical velocity set to none again
-                collidedWithPlatform = true;
+                
                
 
                }
