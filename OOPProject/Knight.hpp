@@ -16,4 +16,9 @@ private:
     float movementSpeed;
     float velocityY; //will help in jump function for the knight
     bool isJumping; //flag to check if knight is suspended in air or not(jumping or not)
+    void decreasehealth(int health);
+
+private:
+    float movementSpeed;
+    int health;
 };

@@ -55,3 +55,10 @@ void Knight::applyGravity(std::vector<Entity>& platforms){
         y=592; //knight on ground
     }
 }
+void Knight::decreaseHealth(int amount) {
+    health -= amount;
+
+    // Optionally: Check for knight's death or other conditions
+    if (health <= 0) {
+        // Handle knight's death
+    }
