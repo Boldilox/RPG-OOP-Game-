@@ -43,9 +43,7 @@ void Knight::applyGravity(std::vector<Entity>& platforms){
                 y =platforms[i].getY() - getCurrentFrame().h;
                 isJumping = false; //reset jumping flag
                 velocityY = 0.0f;//vertical velocity set to none again
-                
-               
-
+            
                }
         } 
     }
@@ -55,10 +53,3 @@ void Knight::applyGravity(std::vector<Entity>& platforms){
         y=592; //knight on ground
     }
 }
-void Knight::decreaseHealth(int amount) {
-    health -= amount;
-
-    // Optionally: Check for knight's death or other conditions
-    if (health <= 0) {
-        // Handle knight's death
-    }

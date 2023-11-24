@@ -1,14 +1,14 @@
-#pragma once
-#include "Entity.hpp"
+// #pragma once
+// #include "Entity.hpp"
 
-class Enemy : public Entity {
-    private:
-    int health;
-    int pwr;
+// class Enemy : public Entity {
+//     private:
+//     int health;
+//     int pwr;
 
-    public:
+//     public:
 
-    void attackKnight(Knight& knight);
+//     void attackKnight(Knight& knight);
     
 
-};
+// };
