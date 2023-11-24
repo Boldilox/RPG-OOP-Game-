@@ -20,7 +20,9 @@ int main(int argc, char* args[]) {
 
     SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
+    //SDL_Texture* wizardTexture = window.loadTexture("res/gfx/wizard.png"); furture ayaan uncomment this when the enemy clss is implemented properly
     //NEED TO IMPLEMENT BUSHES FOR ENEMY
+
     //NEED TO IMPLEMENT ENEMY VARIABLE SO I CAN CALL THAT IN COMBAT SYSTEM
     //make health while you are at it as well future ayaan :)
 
@@ -35,6 +37,7 @@ int main(int argc, char* args[]) {
 
     // Create the knight object
     Knight knight(0, 0, knightTexture); // Initial position (0, 0) - adjust as needed
+    // Wizard wizard(672 , 0 , WizardTexture );
 
     // Assuming the knight spawns on the left side of the first platform
     float knightInitialX = platforms[0].getX(); // Adjust as needed
@@ -45,13 +48,26 @@ int main(int argc, char* args[]) {
     bool gameRunning = true;
     SDL_Event event;
     bool isInCombat=false;
-    bool CombatRunning = false;
+    bool combatRunning = false;
+    RenderWindow* combatWindow;
+    SDL_Event combatEvent;
+    
     
     while (gameRunning) {
         SDL_Delay(15);
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
-                gameRunning = false;
+                std::cout<<"aa rehay hain"<<std::endl;
+                if(combatRunning){
+                    combatRunning = false;
+                    isInCombat = false;
+                    combatWindow->cleanUp();
+                    delete combatWindow;
+                }
+                else{
+                    gameRunning = false;
+                    }
+                
             }
         }
        
@@ -76,24 +92,16 @@ int main(int argc, char* args[]) {
             isInCombat = true;
 
             // Open combat window
-            RenderWindow combatWindow("Combat", 800, 450);
-            bool combatRunning = true;
-            SDL_Event combatEvent;
-
-            while (combatRunning) {
-                while (SDL_PollEvent(&combatEvent)) {
-                    if (combatEvent.type == SDL_QUIT) {
-                        combatRunning = false;
-                        isInCombat = false;
-                    }
-                }
-
-                combatWindow.clear();
-                combatWindow.display();
-            }
-
-            combatWindow.cleanUp();
+            combatWindow = new RenderWindow("Combat", 800, 450);
+            combatRunning = true;
+            
+           
         }
+        if (combatRunning) {
+            combatWindow->clear();
+            combatWindow->display();
+        }
+        
 
         for (int i = 0; i < 10; i++) {
             window.render(platforms[i]);
