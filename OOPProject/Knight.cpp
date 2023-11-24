@@ -17,3 +17,11 @@ void Knight::setPosition(float p_x, float p_y) {
     x = p_x;
     y = p_y-;
 }
+
+void Knight::decreaseHealth(int amount) {
+    health -= amount;
+
+    // Optionally: Check for knight's death or other conditions
+    if (health <= 0) {
+        // Handle knight's death
+    }

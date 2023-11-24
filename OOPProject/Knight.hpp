@@ -8,6 +8,9 @@ public:
     void moveLeft();
     void moveRight();
     void setPosition(float p_x, float p_y); // Add the setPosition method will come handy later as combatsystem will have to spawn knight where itleft off.
+    void decreasehealth(int amount);
+
 private:
     float movementSpeed;
+    int health;
 };
