@@ -20,6 +20,7 @@ int main(int argc, char* args[]) {
 
     SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
+
     //SDL_Texture* wizardTexture = window.loadTexture("res/gfx/wizard.png"); furture ayaan uncomment this when the enemy clss is implemented properly
     //NEED TO IMPLEMENT BUSHES FOR ENEMY
 
@@ -34,6 +35,7 @@ int main(int argc, char* args[]) {
         platforms.push_back(Entity(x, y, cavegroundTexture));
         x += 128;
     }
+    platforms.push_back(Entity(256,528,cavegroundTexture));
 
     // Create the knight object
     Knight knight(0, 0, knightTexture); // Initial position (0, 0) - adjust as needed
@@ -74,10 +76,10 @@ int main(int argc, char* args[]) {
     
         const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
         if (currentKeyStates[SDL_SCANCODE_A]) {
-            knight.moveLeft(); // Move the knight left based implementation
+            knight.moveLeft(platforms); // Move the knight left based implementation
         }
         if (currentKeyStates[SDL_SCANCODE_D]) {
-            knight.moveRight(); // Move the knight right based implementation
+            knight.moveRight(platforms); // Move the knight right based implementation
         }
         if (currentKeyStates[SDL_SCANCODE_W]){
             knight.jump();
@@ -103,7 +105,7 @@ int main(int argc, char* args[]) {
         }
         
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             window.render(platforms[i]);
         }
 
