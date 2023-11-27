@@ -5,6 +5,41 @@
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
 #include "Knight.hpp" // Include the Knight class header
+#include "startscreen.hpp"
+
+bool showStartScreen(RenderWindow& window) {
+    SDL_Texture* startScreenTexture = window.loadTexture("res/gfx/startscreen.png");
+    bool startGame = false;
+    startscreen start(0,0,startScreenTexture);
+
+    SDL_Event event;
+    bool running = true;
+
+    while (running) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+                break;
+            }
+            else if (event.type == SDL_KEYDOWN) {
+                // Check for key presses to start the game (e.g., 'Enter/Return' key) we can change this as we like this.
+                if (event.key.keysym.sym == SDLK_RETURN) {
+                    startGame = true;
+                    running = false;
+                    break;
+                }
+            }
+        }
+
+        window.clear();
+        // Render the start screen
+        window.render(start);
+        window.display();
+    }
+
+    SDL_DestroyTexture(startScreenTexture);
+    return startGame;
+}
 
 int main(int argc, char* args[]) {
     if (SDL_Init(SDL_INIT_VIDEO) > 0) {
@@ -16,6 +51,14 @@ int main(int argc, char* args[]) {
     }
 
     RenderWindow window("Game", 1280, 720);
+
+    bool startGame = showStartScreen(window);
+
+    if (!startGame) {
+        window.cleanUp();
+        SDL_Quit();
+        return 0;
+    }
     
 
     SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");
