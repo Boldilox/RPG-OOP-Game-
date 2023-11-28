@@ -11,6 +11,10 @@ Knight::Knight(float p_x, float p_y, SDL_Texture* p_tex) : Entity(p_x, p_y, p_te
 void Knight::moveLeft(std::vector<Entity>& platforms) {
     // Move the knight left
     x -= movementSpeed;
+
+    if (x < 0) {
+        x = 0; // Set the left boundary
+    }
     
 
     // Check for collisions with platforms after moving
@@ -25,6 +29,12 @@ void Knight::moveLeft(std::vector<Entity>& platforms) {
 void Knight::moveRight(std::vector<Entity>& platforms) {
     // Move the knight right
     x += movementSpeed;
+
+    // Check and adjust the knight's position if it's out of the screen bounds
+    if (x>1216){
+        x=1216;
+    }
+
 
     // Check for collisions with platforms after moving
     for (int i = 0; i < platforms.size(); i++) {
