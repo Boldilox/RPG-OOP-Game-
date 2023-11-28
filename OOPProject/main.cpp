@@ -78,7 +78,9 @@ int main(int argc, char* args[]) {
         platforms.push_back(Entity(x, y, cavegroundTexture));
         x += 128;
     }
+    platforms.push_back(Entity(256,128,cavegroundTexture));
     platforms.push_back(Entity(256,528,cavegroundTexture));
+    platforms.push_back(Entity(0,300,cavegroundTexture));
 
     // Create the knight object
     Knight knight(0, 0, knightTexture); // Initial position (0, 0) - adjust as needed
@@ -148,7 +150,7 @@ int main(int argc, char* args[]) {
         }
         
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < platforms.size(); i++) {
             window.render(platforms[i]);
         }
 

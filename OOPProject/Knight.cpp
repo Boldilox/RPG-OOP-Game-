@@ -42,42 +42,51 @@ void Knight::setPosition(float p_x, float p_y) {
 
 void Knight::jump() {
     if (!isJumping) {
-        velocityY = -15.0f; // velocity of jump can be adjusted
+        velocityY = -13.0f; // velocity of jump can be adjusted
         isJumping = true;   // set flag to check jumping or not
     }
 }
 
 void Knight::applyGravity(std::vector<Entity>& platforms) {
-    if (y < 592) { // 592 is the ground starting y value
+    if (y < 592) {
         velocityY += 0.6f; // gravity force
+        float originalY = y; // Store original y position
+
         y += velocityY;
 
-        // collision detection
         bool collided = false;
         for (int i = 0; i < platforms.size(); i++) {
             if (checkCollisionWithPlatform(platforms[i])) {
-                // collision has occurred
                 collided = true;
-                y = platforms[i].getY() - getCurrentFrame().h;
-                isJumping = false; // reset jumping flag
-                velocityY = 0.0f;   // vertical velocity set to none again
-                break; // no need to check other platforms once a collision is detected
+
+                // Adjust knight's position based on collision direction
+                if (velocityY > 0) { // Knight is moving downwards
+                    y = platforms[i].getY() - getCurrentFrame().h;
+                    isJumping = false;
+                    velocityY = 0.0f;
+                } else if (velocityY < 0) { // Knight is moving upwards
+                    y = platforms[i].getY() + platforms[i].getCurrentFrame().h -64;
+                    velocityY = 0.0f;
+                }
+                break;
             }
         }
 
         if (!collided) {
-            isJumping = true; // set jumping flag if not colliding with any platform
+            isJumping = true;
         }
     } else {
-        isJumping = false; // reset jump flag
-        velocityY = 0.0f;  // velocity reset to zero
-        y = 592;           // knight on ground
+        isJumping = false;
+        velocityY = 0.0f;
+        y = 592;
     }
 }
 
+
 bool Knight::checkCollisionWithPlatform(Entity& platform) { //collision is now out of the apply graivty function for further use.
     return (y + getCurrentFrame().h > platform.getY() &&
-            y < platform.getY() + platform.getCurrentFrame().h &&
+            y < platform.getY() + platform.getCurrentFrame().h-64 &&
             x + (getCurrentFrame().w - 64) > platform.getX() &&
             x < platform.getX() + platform.getCurrentFrame().w);
+            
 }
