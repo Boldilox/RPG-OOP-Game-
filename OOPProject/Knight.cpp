@@ -16,7 +16,6 @@ void Knight::moveLeft(std::vector<Entity>& platforms) {
         x = 0; // Set the left boundary
     }
     
-
     // Check for collisions with platforms after moving
     for (int i = 0; i < platforms.size(); i++) {
         if (checkCollisionWithPlatform(platforms[i])) {

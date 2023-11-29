@@ -43,7 +43,7 @@ bool showStartScreen(RenderWindow& window) {
 }
 
 bool Renderwinning(RenderWindow& window){
-    SDL_Texture* wontexture = window.loadTexture("res/gfx/test.png");
+    SDL_Texture* wontexture = window.loadTexture("res/gfx/won_screen.png");
     bool wondone = false;
     Won winscreen(0,0,wontexture);
 
@@ -93,7 +93,7 @@ int main(int argc, char* args[]) {
     }
     
 
-    SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");
+    SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");//caveground txture loading here
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
     
    
@@ -108,10 +108,10 @@ int main(int argc, char* args[]) {
     int y = 592;
 
     for (int i = 0; i < 10; i++) {
-        platforms.push_back(Entity(x, y, cavegroundTexture));
+        platforms.push_back(Entity(x, y, cavegroundTexture)); //ground being made
         x += 128;
     }
-    platforms.push_back(Entity(266,464,cavegroundTexture));
+    platforms.push_back(Entity(266,464,cavegroundTexture));//platforms to jump on
     platforms.push_back(Entity(0,400,cavegroundTexture));
     platforms.push_back(Entity(280,272,cavegroundTexture));
     platforms.push_back(Entity(398,272,cavegroundTexture));
@@ -138,8 +138,6 @@ int main(int argc, char* args[]) {
     SDL_Event combatEvent;
     bool won = false;
    
-    
-    
     while (gameRunning) {
         SDL_Delay(15);
         // std::cout<<"knight x = " << knight.getX()<<std::endl;
@@ -155,7 +153,7 @@ int main(int argc, char* args[]) {
                 }
                 else{
                     gameRunning = false;
-                    won=true;
+                    
                     }
                 
             }
@@ -189,16 +187,14 @@ int main(int argc, char* args[]) {
             combatWindow = new RenderWindow("Combat", 800, 450);
             combatRunning = true;
             
-           
         }
         if (combatRunning) {
             combatWindow->clear();
             combatWindow->display();
         }
         
-
         for (int i = 0; i < platforms.size(); i++) {
-            window.render(platforms[i]);
+            window.render(platforms[i]); //rendering all platforms 
         }
 
         // Render the knight after movement
@@ -211,7 +207,7 @@ int main(int argc, char* args[]) {
     SDL_Quit();
 
     if(won){
-        RenderWindow winningscreen("SUccess or so..", 1280 , 720);
+        RenderWindow winningscreen("Success or so..", 1280 , 720);
         bool wongame = Renderwinning(winningscreen);
         if(!wongame){
         winningscreen.cleanUp();
