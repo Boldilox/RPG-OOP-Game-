@@ -78,9 +78,14 @@ int main(int argc, char* args[]) {
         platforms.push_back(Entity(x, y, cavegroundTexture));
         x += 128;
     }
-    platforms.push_back(Entity(256,128,cavegroundTexture));
-    platforms.push_back(Entity(256,528,cavegroundTexture));
-    platforms.push_back(Entity(0,300,cavegroundTexture));
+    platforms.push_back(Entity(266,464,cavegroundTexture));
+    platforms.push_back(Entity(0,400,cavegroundTexture));
+    platforms.push_back(Entity(280,272,cavegroundTexture));
+    platforms.push_back(Entity(398,272,cavegroundTexture));
+    platforms.push_back(Entity(826,400,cavegroundTexture)); //tricky platform to land on hehe
+    platforms.push_back(Entity(1082,292,cavegroundTexture));
+    platforms.push_back(Entity(826,162,cavegroundTexture));
+    platforms.push_back(Entity(1152,128,cavegroundTexture));
 
     // Create the knight object
     Knight knight(0, 0, knightTexture); // Initial position (0, 0) - adjust as needed
@@ -98,10 +103,12 @@ int main(int argc, char* args[]) {
     bool combatRunning = false;
     RenderWindow* combatWindow;
     SDL_Event combatEvent;
-    
+    bool won = false;
     
     while (gameRunning) {
         SDL_Delay(15);
+        // std::cout<<"knight x = " << knight.getX()<<std::endl;
+        // std::cout<<"knight y = " << knight.getY()<<std::endl;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 std::cout<<"aa rehay hain"<<std::endl;
@@ -113,8 +120,12 @@ int main(int argc, char* args[]) {
                 }
                 else{
                     gameRunning = false;
+                    won=true;
                     }
                 
+            }
+            else if ((knight.getX() == 1152 || knight.getX()> 1152) && (knight.getY() == 0)){
+                gameRunning = false;
             }
         }
        
@@ -165,3 +176,5 @@ int main(int argc, char* args[]) {
 
     return 0;
 }
+
+
