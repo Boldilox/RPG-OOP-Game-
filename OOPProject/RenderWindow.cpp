@@ -5,6 +5,7 @@
 #include "Knight.hpp"
 #include"Entity.hpp"
 #include "startscreen.hpp"
+#include "Won.hpp"
 
 RenderWindow::RenderWindow(const char* p_title,int p_w,int p_h):window(NULL),renderer(NULL)
 {
@@ -48,7 +49,7 @@ void RenderWindow::render(Entity& p_entity) {
     dst.y = p_entity.getY();
 
     // Check if the entity is a startscreen
-    if (dynamic_cast<startscreen*>(&p_entity) != nullptr) {
+    if (dynamic_cast<startscreen*>(&p_entity) != nullptr || dynamic_cast<Won*>(&p_entity) != nullptr) {
         // Set the dimensions of the start screen image
         src.w = 1280; // Assuming the start screen texture width is 1280
         src.h = 720; // Assuming the start screen texture height is 720

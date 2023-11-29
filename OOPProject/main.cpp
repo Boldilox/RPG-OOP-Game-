@@ -6,6 +6,7 @@
 #include "Entity.hpp"
 #include "Knight.hpp" // Include the Knight class header
 #include "startscreen.hpp"
+#include "Won.hpp"
 
 bool showStartScreen(RenderWindow& window) {
     SDL_Texture* startScreenTexture = window.loadTexture("res/gfx/startscreen.png");
@@ -41,6 +42,37 @@ bool showStartScreen(RenderWindow& window) {
     return startGame;
 }
 
+bool Renderwinning(RenderWindow& window){
+    SDL_Texture* wontexture = window.loadTexture("res/gfx/test.png");
+    bool wondone = false;
+    Won winscreen(0,0,wontexture);
+
+    SDL_Event wonevent ;
+    bool running = true;
+    while (running){
+        while(SDL_PollEvent(&wonevent)){
+            if(wonevent.type == SDL_QUIT){
+                running = false;
+                break;
+            }
+            else if(wonevent.type == SDL_KEYDOWN){
+                if (wonevent.key.keysym.sym == SDLK_RETURN) {
+                    wondone = true;
+                    running = false;
+                    break;
+                }
+            }
+        }
+
+        window.clear();
+        window.render(winscreen);
+        window.display();
+    } 
+    
+    SDL_DestroyTexture(wontexture);
+    return wondone;
+}
+
 int main(int argc, char* args[]) {
     if (SDL_Init(SDL_INIT_VIDEO) > 0) {
         std::cout << "Hey..SDL_Init has failed. SDL ERROR: " << SDL_GetError() << std::endl;
@@ -63,7 +95,8 @@ int main(int argc, char* args[]) {
 
     SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
-
+    
+   
     //SDL_Texture* wizardTexture = window.loadTexture("res/gfx/wizard.png"); furture ayaan uncomment this when the enemy clss is implemented properly
     //NEED TO IMPLEMENT BUSHES FOR ENEMY
 
@@ -104,6 +137,8 @@ int main(int argc, char* args[]) {
     RenderWindow* combatWindow;
     SDL_Event combatEvent;
     bool won = false;
+   
+    
     
     while (gameRunning) {
         SDL_Delay(15);
@@ -126,6 +161,7 @@ int main(int argc, char* args[]) {
             }
             else if ((knight.getX() == 1152 || knight.getX()> 1152) && (knight.getY() == 0)){
                 gameRunning = false;
+                won = true;
             }
         }
        
@@ -174,7 +210,16 @@ int main(int argc, char* args[]) {
     window.cleanUp();
     SDL_Quit();
 
+    if(won){
+        RenderWindow winningscreen("SUccess or so..", 1280 , 720);
+        bool wongame = Renderwinning(winningscreen);
+        if(!wongame){
+        winningscreen.cleanUp();
+        SDL_Quit();
+        return 0;
+    }
+    }
+
     return 0;
+
 }
-
-
