@@ -71,6 +71,31 @@ void RenderWindow::render(Entity& p_entity) {
     SDL_RenderCopy(renderer, p_entity.getTex(), &src, &dst);
 }
 
+void RenderWindow::toggleCombatWindow() {
+    combatMode = !combatMode; // Toggle combat mode
+    if (combatMode) {
+        createCombatWindow(800, 600); // Create combat window if entering combat mode
+    } else {
+        cleanUpCombatWindow(); // Clean up combat window if exiting combat mode
+    }
+}
+
+void RenderWindow::createCombatWindow(int width, int height) {
+    combatWindow = SDL_CreateWindow("Combat", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    if (combatWindow == NULL) {
+        std::cout << "Combat Window failed to init. Error: " << SDL_GetError() << std::endl;
+    }
+
+    combatRenderer = SDL_CreateRenderer(combatWindow, -1, SDL_RENDERER_ACCELERATED);
+}
+
+void RenderWindow::cleanUpCombatWindow() {
+    SDL_DestroyRenderer(combatRenderer);
+    SDL_DestroyWindow(combatWindow);
+    combatRenderer = nullptr;
+    combatWindow = nullptr;
+}
+
 
 void RenderWindow::display(){
     SDL_RenderPresent(renderer);

@@ -134,7 +134,7 @@ int main(int argc, char* args[]) {
     SDL_Event event;
     bool isInCombat=false;
     bool combatRunning = false;
-    RenderWindow* combatWindow;
+    
     SDL_Event combatEvent;
     bool won = false;
    
@@ -145,17 +145,7 @@ int main(int argc, char* args[]) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 std::cout<<"aa rehay hain"<<std::endl;
-                if(combatRunning){
-                    combatRunning = false;
-                    isInCombat = false;
-                    combatWindow->cleanUp();
-                    delete combatWindow;
-                }
-                else{
-                    gameRunning = false;
-                    
-                    }
-                
+                gameRunning = false;
             }
             else if ((knight.getX() == 1152 || knight.getX()> 1152) && (knight.getY() == 0)){
                 gameRunning = false;
@@ -163,7 +153,7 @@ int main(int argc, char* args[]) {
             }
         }
        
-    
+
         const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
         if (currentKeyStates[SDL_SCANCODE_A]) {
             knight.moveLeft(platforms); // Move the knight left based implementation
@@ -180,19 +170,6 @@ int main(int argc, char* args[]) {
 
         window.clear();
 
-        if (currentKeyStates[SDL_SCANCODE_K]) {
-            isInCombat = true;
-
-            // Open combat window
-            combatWindow = new RenderWindow("Combat", 800, 450);
-            combatRunning = true;
-            
-        }
-        if (combatRunning) {
-            combatWindow->clear();
-            combatWindow->display();
-        }
-        
         for (int i = 0; i < platforms.size(); i++) {
             window.render(platforms[i]); //rendering all platforms 
         }

@@ -1,66 +1,74 @@
-// // CombatWindow.cpp
+
+
 // #include "CombatWindow.hpp"
-// #include <SFML/Graphics.hpp>
-// #include <iostream>
 
-// // Constructor: Initializes the window and sprite resources
-// CombatWindow::CombatWindow() {
-//     window = new sf::RenderWindow(sf::VideoMode(800, 600), "Turn-Based RPG Game - Combat System");
-//     knightTexture = new sf::Texture();
-//     enemyTexture = new sf::Texture();
-//     knightSprite = new sf::Sprite();
-//     enemySprite = new sf::Sprite();
 
-//     loadTextures();
-//     createSprites();
-// }
 
-// // Destructor: Cleans up dynamically allocated resources
+
+// CombatWindow::CombatWindow() : window(nullptr), renderer(nullptr) {}
+
 // CombatWindow::~CombatWindow() {
-//     delete window;
-//     delete knightTexture;
-//     delete enemyTexture;
-//     delete knightSprite;
-//     delete enemySprite;
+//     destroy();
 // }
 
-// // Starts the game loop
-// void CombatWindow::run() {
-//     gameLoop();
-// }
-
-// // Loads textures for the knight and enemy from files
-// void CombatWindow::loadTextures() {
-//     if (!knightTexture->loadFromFile("knight.png")) {
-//         std::cerr << "Failed to load knight texture" << std::endl;
-//         exit(-1);
+// void CombatWindow::create(int width, int height) {
+//     window = SDL_CreateWindow("Combat", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+//     if (window == nullptr) {
+//          std::cout<<"Window failed to init. Error: "<< SDL_GetError()<<std::endl;
 //     }
-//     if (!enemyTexture->loadFromFile("enemy.png")) {
-//         std::cerr << "Failed to load enemy texture" << std::endl;
-//         exit(-1);
-//     }
+
+//     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    
 // }
 
-// // Creates and positions knight and enemy sprites
-// void CombatWindow::createSprites() {
-//     knightSprite->setTexture(*knightTexture);
-//     enemySprite->setTexture(*enemyTexture);
-//     knightSprite->setPosition(100, 300);
-//     enemySprite->setPosition(600, 300);
-// }
+// void CombatWindow::render(Entity& p_entity) {
+//     SDL_Rect src;
+//     src.x = p_entity.getCurrentFrame().x;
+//     src.y = p_entity.getCurrentFrame().y;
+//     src.w = p_entity.getCurrentFrame().w;
+//     src.h = p_entity.getCurrentFrame().h;
 
-// // Main game loop: Handles window events and renders sprites
-// void CombatWindow::gameLoop() {
-//     while (window->isOpen()) {
-//         sf::Event event;
-//         while (window->pollEvent(event)) {
-//             if (event.type == sf::Event::Closed)
-//                 window->close();
+//     SDL_Rect dst;
+//     dst.x = p_entity.getX();
+//     dst.y = p_entity.getY();
+
+   
+
+    
+//      if (dynamic_cast<Knight*>(&p_entity) != nullptr){
+//             dst.w = 64; // Adjust scale factor for the knight
+//             dst.h = 64;
+//             dst.y += (128 - dst.h);
+//         } else {
+//             dst.w = src.w;
+//             dst.h = src.h;
 //         }
+    
 
-//         window->clear();
-//         window->draw(*knightSprite);
-//         window->draw(*enemySprite);
-//         window->display();
+
+// }
+
+// void CombatWindow::destroy() {
+//     if (renderer != nullptr) {
+//         SDL_DestroyRenderer(renderer);
+//         renderer = nullptr;
 //     }
+//     if (window != nullptr) {
+//         SDL_DestroyWindow(window);
+//         window = nullptr;
+//     }
+// }
+
+// SDL_Texture* CombatWindow::loadTexture(const char* p_filePath) {
+//     SDL_Texture* texture = NULL;
+//     texture = IMG_LoadTexture(renderer,p_filePath);
+//     if (texture==NULL){
+//         std::cout<<"Failed to load a texture. Error: "<<SDL_GetError()<<std::endl;
+
+//     }
+//     return texture;
+// }
+
+// void CombatWindow::display(){
+//     SDL_RenderPresent(renderer);
 // }

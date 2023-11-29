@@ -1,31 +1,26 @@
-// // CombatWindow.hpp
-// #ifndef COMBAT_WINDOW_HPP
-// #define COMBAT_WINDOW_HPP
 
-// // Forward declarations of SFML classes to reduce direct dependency in the header file
-// namespace sf {
-//     class RenderWindow;
-//     class Texture;
-//     class Sprite;
-// }
+// #pragma once
 
-// // CombatWindow class declaration
+// #include <iostream>
+// #include <SDL.h>
+// #include<SDL_image.h>
+// #include "Knight.hpp"
+
+// #include "Entity.hpp"
 // class CombatWindow {
-// public:
-//     CombatWindow();   // Constructor
-//     ~CombatWindow();  // Destructor to clean up resources
-//     void run();       // Function to start the combat window
-
 // private:
-//     sf::RenderWindow* window;  // Pointer to the SFML window
-//     sf::Texture* knightTexture;    // Pointer to the knight's texture
-//     sf::Texture* enemyTexture;     // Pointer to the enemy's texture
-//     sf::Sprite* knightSprite;      // Pointer to the knight's sprite
-//     sf::Sprite* enemySprite;       // Pointer to the enemy's sprite
+//     SDL_Window* window;
+//     SDL_Renderer* renderer;
 
-//     void loadTextures();   // Function to load textures
-//     void createSprites();  // Function to create and position sprites
-//     void gameLoop();       // Main game loop function
+// public:
+
+//     CombatWindow();
+//     ~CombatWindow();
+
+//     void create(int width, int height);
+//     void render(Entity& p_entity);
+//     void destroy();
+//     SDL_Texture* loadTexture(const char* p_filePath);
+//     void display();
+    
 // };
-
-// #endif // COMBAT_WINDOW_HPP
