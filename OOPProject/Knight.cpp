@@ -1,11 +1,21 @@
 // Knight.cpp
 #include "Knight.hpp"
 
+
 Knight::Knight(float p_x, float p_y, SDL_Texture* p_tex) : Entity(p_x, p_y, p_tex) {
+    
     movementSpeed = 5.0f;
     isJumping = false;
     velocityY=0.0f;
     health = 200;
+}
+
+void Knight::decreasehealth(int dmg){
+    health -= dmg;
+}
+
+int Knight::gethealth(){
+    return health;
 }
 
 void Knight::moveLeft(std::vector<Entity>& platforms) {

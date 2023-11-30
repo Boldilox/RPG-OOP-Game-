@@ -19,9 +19,7 @@ public:
     bool pauseCharacterMovement;
     
 private:
-    bool combatMode; // Variable to track combat mode
-    SDL_Window* combatWindow; // Combat window
-    SDL_Renderer* combatRenderer; // Renderer for combat window
+   
     SDL_Window* window;
     SDL_Renderer* renderer;
     
