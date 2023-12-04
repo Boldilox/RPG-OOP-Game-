@@ -8,6 +8,7 @@
 #include "Won.hpp"
 #include "BG.hpp"
 #include "Lost.hpp"
+#include "Enemy.hpp"
 
 RenderWindow::RenderWindow(const char* p_title,int p_w,int p_h):window(NULL),renderer(NULL)
 {

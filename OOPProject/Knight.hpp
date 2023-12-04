@@ -5,6 +5,7 @@
 
 
 
+
 class Knight : public Entity {
 public:
     Knight(float p_x, float p_y, SDL_Texture* p_tex);
@@ -15,7 +16,8 @@ public:
     void applyGravity(std::vector<Entity>& platforms);//simulate gravity to bring knight back to the ground
     void decreasehealth(int dmg);
     int gethealth(); 
-   
+    void sethealth(int h);
+    // void slash(Enemy& enemy);
     
 private:
     

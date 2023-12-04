@@ -9,6 +9,9 @@
 #include "Won.hpp"
 #include "BG.hpp"
 #include "Lost.hpp"
+#include "Enemy.hpp"
+#include "Troll.hpp"
+#include "Skeleton.hpp"
 
 
 bool showStartScreen(RenderWindow& window) {
@@ -132,12 +135,9 @@ int main(int argc, char* args[]) {
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
     SDL_Texture* backgroundtexture = window.loadTexture("res/gfx/Background.png");
     SDL_Texture* testtexture = window.loadTexture("res/gfx/test.png");
+    SDL_Texture* airplatform = window.loadTexture("res/gfx/airplatform.png");
     
-    //SDL_Texture* wizardTexture = window.loadTexture("res/gfx/wizard.png"); furture ayaan uncomment this when the enemy clss is implemented properly
     //NEED TO IMPLEMENT BUSHES FOR ENEMY
-
-    //NEED TO IMPLEMENT ENEMY VARIABLE SO I CAN CALL THAT IN COMBAT SYSTEM
-    //make health while you are at it as well future ayaan :)
 
     std::vector<Entity> platforms;
     int x = 0;
@@ -147,14 +147,17 @@ int main(int argc, char* args[]) {
         platforms.push_back(Entity(x, y, cavegroundTexture)); //ground being made
         x += 128;
     }
-    platforms.push_back(Entity(266,464,cavegroundTexture));//platforms to jump on
-    platforms.push_back(Entity(0,400,cavegroundTexture));
-    platforms.push_back(Entity(280,272,cavegroundTexture));
-    platforms.push_back(Entity(398,272,cavegroundTexture));
-    platforms.push_back(Entity(826,400,cavegroundTexture)); //tricky platform to land on hehe
-    platforms.push_back(Entity(1082,292,cavegroundTexture));
-    platforms.push_back(Entity(826,162,cavegroundTexture));
-    platforms.push_back(Entity(1152,128,cavegroundTexture));
+    platforms.push_back(Entity(266,464,airplatform));//platforms to jump on
+    platforms.push_back(Entity(0,400,airplatform));
+    platforms.push_back(Entity(280,272,airplatform));
+    platforms.push_back(Entity(398,272,airplatform));
+    platforms.push_back(Entity(826,400,airplatform)); //tricky platform to land on hehe
+    platforms.push_back(Entity(1082,292,airplatform));
+    platforms.push_back(Entity(826,162,airplatform));
+    platforms.push_back(Entity(1152,128,airplatform));
+
+    std::vector<Entity> stones;
+    
 
     BG Background(0,0,backgroundtexture);
     BG test(0,0,testtexture);
@@ -177,6 +180,17 @@ int main(int argc, char* args[]) {
     RenderWindow* combatWindow = nullptr; 
     bool savedPosition = false;
     float savedKnightX , savedKnightY;
+    bool enemyGenerated= false;
+    float enemyX = 1152;
+    float enemyY = 128;
+
+    SDL_Texture* enemytexture = window.loadTexture("res/gfx/KnightSprite.png");
+    Skeleton enemy(enemyX,enemyY , enemytexture, 40 ,1);
+    Troll enemy1(1024 , enemyY , enemytexture, 60,2);
+    std::vector<Enemy> enemies;
+    enemies.push_back(enemy);
+    enemies.push_back(enemy1);    
+    int tofight;
 
     while (gameRunning) {
         SDL_Delay(15);
@@ -202,10 +216,10 @@ int main(int argc, char* args[]) {
                     savedKnightY = knight.getY();
                     savedPosition = true;
                 }
-                
                 isInCombat = !isInCombat; // Toggle combat mode
-            }
+                tofight = rand()%2;
 
+            }
             if (currentKeyStates[SDL_SCANCODE_A]) {
                 knight.moveLeft(platforms); // Move the knight left based implementation
             }
@@ -230,6 +244,7 @@ int main(int argc, char* args[]) {
             window.render(knight);
 
             window.display();
+            
         }
         else if(isInCombat){
             SDL_Delay(30);
@@ -246,30 +261,55 @@ int main(int argc, char* args[]) {
                 }
             }
             const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-            if(currentKeyStates[SDL_SCANCODE_UP]){
-                int randomn = rand()%3;
-                std::cout<<randomn;
-            }
-            if(currentKeyStates[SDL_SCANCODE_DOWN]){
+            if(currentKeyStates[SDL_SCANCODE_UP]){ //best attack technically but low damage
+                SDL_Delay(100);
+                int chance = rand()%7;
+                if (chance<=5){ //85% chance attack will land
+                    enemies[tofight].decreasehealth(15);
+                }
+                //15% chance you will miss hehe
+                enemies[tofight].attackKnight(knight);
 
             }
-            if(currentKeyStates[SDL_SCANCODE_LEFT]){
+            if(currentKeyStates[SDL_SCANCODE_DOWN]){ //block mechanism for knight
+                SDL_Delay(100);
+                int checkblock = rand()%6;
+                int currenthealth = knight.gethealth();
 
+                if (checkblock <= 3){
+                    enemies[tofight].attackKnight(knight);
+                    knight.sethealth(currenthealth);
+                } 
+                else if(checkblock>=3){
+                    enemies[tofight].attackKnight(knight);
+                }
+            }
+            if(currentKeyStates[SDL_SCANCODE_LEFT]){  //50% chance attack but INSANE Damaege
+                SDL_Delay(100);
+                int chance = rand()%6;
+                if(chance<=2){
+                    enemies[tofight].decreasehealth(30);
+                    std::cout<<enemies[tofight].gethealth()<<std::endl;
+                }
+                enemies[tofight].attackKnight(knight);
+            }
+            if(currentKeyStates[SDL_SCANCODE_RIGHT]){ //100% attack hit rate but low damage
+                SDL_Delay(100);
+                enemies[tofight].decreasehealth(7);
+                enemies[tofight].attackKnight(knight);
             }
             
             knight.setPosition(256,592);
             window.clear();
             window.render(knight);
+            window.render(enemies[tofight]);
             window.display();
-
-            if(currentKeyStates[SDL_SCANCODE_K]){
-                knight.decreasehealth(200);
+            
+            if(enemies[tofight].gethealth()<=0){
+                isInCombat = false;
+                knight.setPosition(savedKnightX,savedKnightY);
+                savedPosition = false;
             }
-            // if(currentKeyStates[SDL_SCANCODE_I]){
-            //     isInCombat = false;
-            //     knight.setPosition(savedKnightX,savedKnightY);
-            //     savedPosition = false;
-            // }
             
         }
     }

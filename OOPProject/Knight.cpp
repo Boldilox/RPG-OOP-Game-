@@ -18,6 +18,9 @@ int Knight::gethealth(){
     return health;
 }
 
+void Knight::sethealth(int h){
+    health = h;
+}
 void Knight::moveLeft(std::vector<Entity>& platforms) {
     // Move the knight left
     x -= movementSpeed;
@@ -101,6 +104,9 @@ void Knight::applyGravity(std::vector<Entity>& platforms) {
     }
 }
 
+// void Knight::slash(Enemy& enemy){
+//     enemy.decreasehealth(20);
+// }
 
 bool Knight::checkCollisionWithPlatform(Entity& platform) { //collision is now out of the apply graivty function for further use.
     return (y + getCurrentFrame().h > platform.getY() &&
