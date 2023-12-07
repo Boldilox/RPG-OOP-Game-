@@ -25,7 +25,8 @@ In this game, players embark on a journey through a meticulously crafted world, 
 - Programming Language: Used C++ throughout this project.
 
 
-# Installation and Running the Game:
+# Running the Game:
+Use Makefile to copy the commands in the terminal to compile and run the game.
 
 
 # Refrences: 
