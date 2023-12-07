@@ -17,6 +17,8 @@ public:
     void decreasehealth(int dmg);
     int gethealth(); 
     void sethealth(int h);
+    bool checkenemyspawn(std::vector<Entity>& platforms);
+
     // void slash(Enemy& enemy);
     
 private:
@@ -26,4 +28,5 @@ private:
     bool isJumping; //flag to check if knight is suspended in air or not(jumping or not)
     int health; // health of player
     bool checkCollisionWithPlatform(Entity& platform); //differentiatinig collision from gravity so i can check for movement left and right as well.
+
 };

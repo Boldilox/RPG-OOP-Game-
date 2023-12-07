@@ -115,3 +115,12 @@ bool Knight::checkCollisionWithPlatform(Entity& platform) { //collision is now o
             x < platform.getX() + platform.getCurrentFrame().w);
             
 }
+
+bool Knight::checkenemyspawn(std::vector<Entity>& platforms){
+    for (int i;i < platforms.size(); i++){
+        if(checkCollisionWithPlatform(platforms[i])){
+            return true;
+        }
+    }
+    return false;
+}

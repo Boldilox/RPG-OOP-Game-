@@ -9,6 +9,7 @@
 #include "BG.hpp"
 #include "Lost.hpp"
 #include "Enemy.hpp"
+#include "Moveset.hpp"
 
 RenderWindow::RenderWindow(const char* p_title,int p_w,int p_h):window(NULL),renderer(NULL)
 {
@@ -65,7 +66,14 @@ void RenderWindow::render(Entity& p_entity) {
             dst.w = 64; // Adjust scale factor for the knight
             dst.h = 64;
             dst.y += (128 - dst.h);
-        } else {
+        }
+        else if(dynamic_cast<Moveset*>(&p_entity) != nullptr){
+            src.w = 500;
+            src.h = 500;
+            dst.w = 500;
+            dst.h = 500;
+        } 
+        else {
             dst.w = src.w;
             dst.h = src.h;
         }

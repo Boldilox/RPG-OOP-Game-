@@ -12,7 +12,39 @@
 #include "Enemy.hpp"
 #include "Wizard.hpp"
 #include "Skeleton.hpp"
+#include "Moveset.hpp"
+#include <SDL_mixer.h>
 
+Mix_Music *bgMusic = NULL;
+
+bool init()
+{
+    //Initialization flag
+    bool success = true;
+
+    //Initialize SDL
+    if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+                {
+                    printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+                    success = false;
+                }
+                return success;
+}
+
+
+bool loadMedia()
+{
+    bool success = true;
+        // load the background music
+        bgMusic = Mix_LoadMUS( "sounds/DIsc13.mp3" ); 
+
+    if(bgMusic == NULL){
+        printf("Unable to load music: %s \n", Mix_GetError());
+        success = false;
+    }
+
+    return success;
+}
 
 bool showStartScreen(RenderWindow& window) {
     SDL_Texture* startScreenTexture = window.loadTexture("res/gfx/startscreen.png");
@@ -21,7 +53,7 @@ bool showStartScreen(RenderWindow& window) {
 
     SDL_Event event;
     bool running = true;
-
+    Mix_PlayMusic (bgMusic, -1);  // -1 to loop the music indefinitely
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -112,6 +144,7 @@ bool RenderLosing(RenderWindow& window){
 
 
 int main(int argc, char* args[]) {
+   
     if (SDL_Init(SDL_INIT_VIDEO) > 0) {
         std::cout << "Hey..SDL_Init has failed. SDL ERROR: " << SDL_GetError() << std::endl;
     }
@@ -120,7 +153,10 @@ int main(int argc, char* args[]) {
         std::cout << "IMG_Init has failed. Error" << SDL_GetError() << std::endl;
     }
 
+
+
     RenderWindow window("Game", 1280, 720);
+   
 
     bool startGame = showStartScreen(window);
 
@@ -130,15 +166,13 @@ int main(int argc, char* args[]) {
         return 0;
     }
     
-
     SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");//caveground txture loading here
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
     SDL_Texture* backgroundtexture = window.loadTexture("res/gfx/Background.png");
     SDL_Texture* testtexture = window.loadTexture("res/gfx/test.png");
     SDL_Texture* airplatform = window.loadTexture("res/gfx/airplatform.png"); //texture for platforms to jump to
     SDL_Texture* stonetexture = window.loadTexture("res/gfx/Stones.png"); //stone texture is added here
-    
-    //NEED TO IMPLEMENT BUSHES FOR ENEMY
+    SDL_Texture* movesettexture = window.loadTexture("res/gfx/MOVESET.png");
 
     std::vector<Entity> platforms;
     int x = 0;
@@ -175,13 +209,14 @@ int main(int argc, char* args[]) {
     BG test(0,0,testtexture);
     // Create the knight object
     Knight knight(0, 0, knightTexture); // Initial position (0, 0) - adjust as needed
-    // Wizard wizard(672 , 0 , WizardTexture );
+    
 
     // Assuming the knight spawns on the left side of the first platform
     float knightInitialX = platforms[0].getX(); // Adjust as needed
     float knightInitialY = platforms[0].getY() - knight.getCurrentFrame().h+64; // Adjust as needed
 
     knight.setPosition(knightInitialX, knightInitialY); // Set knight's position
+    Moveset moveset(0,0,movesettexture);
 
     bool gameRunning = true;
     SDL_Event event;
@@ -223,17 +258,25 @@ int main(int argc, char* args[]) {
 
             const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
             
-            if (currentKeyStates[SDL_SCANCODE_C]) {
-                if (!savedPosition) {
-                    // Save knight's position only if it's not already saved
-                    savedKnightX = knight.getX();
-                    savedKnightY = knight.getY();
-                    savedPosition = true;
-                }
-                isInCombat = !isInCombat; // Toggle combat mode
-                tofight = rand()%2;
+            
+                if (knight.checkenemyspawn(stones)) {
+                    
+                    int chancetofight = rand()%10;
+                    if(chancetofight >= 7){
 
-            }
+                    
+                        if (!savedPosition) {
+                            // Save knight's position only if it's not already saved
+                            savedKnightX = knight.getX();
+                            savedKnightY = knight.getY();
+                            savedPosition = true;
+                        }
+                        isInCombat = !isInCombat; // Toggle combat mode
+                        tofight = rand()%2;
+                    }
+
+                }
+            
             if (currentKeyStates[SDL_SCANCODE_A]) {
                 knight.moveLeft(platforms); // Move the knight left based implementation
             }
@@ -319,6 +362,7 @@ int main(int argc, char* args[]) {
             knight.setPosition(384,464);
             window.clear();
             window.render(knight);
+            window.render(moveset);
             window.render(enemies[tofight]);
             window.display();
             
@@ -329,6 +373,7 @@ int main(int argc, char* args[]) {
             }
             
         }
+        
     }
     
 
