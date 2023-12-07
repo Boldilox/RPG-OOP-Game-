@@ -27,5 +27,14 @@ In this game, players embark on a journey through a meticulously crafted world, 
 - Design an intuitive and engaging user interface.
 - Ensure optimal game performance and a bug-free experience.
 
+# Development Tools and Techniques
+-Programming Language: Used C++ throughout this project.
+
+
+# Installation and Running the Game:
+
+
+#Refrences: 
+
 
 
