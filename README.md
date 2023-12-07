@@ -1,10 +1,10 @@
 # RPG-OOP-Game: A Turn-Based Adventure
 
 # Project Overview
-Title: Turn-Based RPG Game Development
-Developers: Ayaan Ahmed, Mustafa Hussain, Muhammad Ahsan (Group-9)
-Institution: Habib University
-Course: Object-Oriented Programming
+- Title: Turn-Based RPG Game Development
+- Developers: Ayaan Ahmed, Mustafa Hussain, Muhammad Ahsan (Group-9)
+- Institution: Habib University
+- Course: Object-Oriented Programming
 
 This project is an ambitious endeavor by three students to create a turn-based Role-Playing Game (RPG) that encapsulates the essence of classic RPGs while leveraging modern object-oriented programming principles. Our aim is to deliver a game that offers an immersive storyline, character progression, and strategic combat mechanics, providing an engaging and challenging experience for players.
 
@@ -22,7 +22,7 @@ In this game, players embark on a journey through a meticulously crafted world, 
 - Ensure optimal game performance and a bug-free experience.
 
 # Development Tools and Techniques
--Programming Language: Used C++ throughout this project.
+- Programming Language: Used C++ throughout this project.
 
 
 # Installation and Running the Game:
