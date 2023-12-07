@@ -1,6 +1,6 @@
 # RPG-OOP-Game: A Turn-Based Adventure
 
-#Project Overview
+# Project Overview
 Title: Turn-Based RPG Game Development
 Developers: Ayaan Ahmed, Mustafa Hussain, Muhammad Ahsan (Group-9)
 Institution: Habib University
@@ -28,7 +28,7 @@ In this game, players embark on a journey through a meticulously crafted world, 
 # Installation and Running the Game:
 
 
-#Refrences: 
+# Refrences: 
 
 
 
