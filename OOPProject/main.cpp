@@ -10,7 +10,7 @@
 #include "BG.hpp"
 #include "Lost.hpp"
 #include "Enemy.hpp"
-#include "Troll.hpp"
+#include "Wizard.hpp"
 #include "Skeleton.hpp"
 
 
@@ -135,7 +135,8 @@ int main(int argc, char* args[]) {
     SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
     SDL_Texture* backgroundtexture = window.loadTexture("res/gfx/Background.png");
     SDL_Texture* testtexture = window.loadTexture("res/gfx/test.png");
-    SDL_Texture* airplatform = window.loadTexture("res/gfx/airplatform.png");
+    SDL_Texture* airplatform = window.loadTexture("res/gfx/airplatform.png"); //texture for platforms to jump to
+    SDL_Texture* stonetexture = window.loadTexture("res/gfx/Stones.png"); //stone texture is added here
     
     //NEED TO IMPLEMENT BUSHES FOR ENEMY
 
@@ -157,6 +158,17 @@ int main(int argc, char* args[]) {
     platforms.push_back(Entity(1152,128,airplatform));
 
     std::vector<Entity> stones;
+    int stonex = 640 ; 
+    int stoney = 568;
+
+    for (int i = 0; i < 6;i++){
+        stones.push_back(Entity(stonex , stoney , stonetexture));
+        stonex += 128;
+    }
+
+    stones.push_back(Entity(0,376,stonetexture));
+    stones.push_back(Entity(826, 138 , stonetexture));
+
     
 
     BG Background(0,0,backgroundtexture);
@@ -177,19 +189,21 @@ int main(int argc, char* args[]) {
     bool combatRunning = true;
     bool won = false;
     bool lost = false;
-    RenderWindow* combatWindow = nullptr; 
+    
     bool savedPosition = false;
     float savedKnightX , savedKnightY;
     bool enemyGenerated= false;
     float enemyX = 1152;
     float enemyY = 128;
 
-    SDL_Texture* enemytexture = window.loadTexture("res/gfx/KnightSprite.png");
-    Skeleton enemy(enemyX,enemyY , enemytexture, 40 ,1);
-    Troll enemy1(1024 , enemyY , enemytexture, 60,2);
+    SDL_Texture* wizardtexture = window.loadTexture("res/gfx/Wizard.png");
+    SDL_Texture* skeletontexture = window.loadTexture("res/gfx/Skeleton.png");
+
+    Skeleton skeleton(enemyX,enemyY , skeletontexture, 40 ,1);
+    Wizard wizard(enemyX , enemyY , wizardtexture, 60,2);
     std::vector<Enemy> enemies;
-    enemies.push_back(enemy);
-    enemies.push_back(enemy1);    
+    enemies.push_back(skeleton);
+    enemies.push_back(wizard);    
     int tofight;
 
     while (gameRunning) {
@@ -238,6 +252,9 @@ int main(int argc, char* args[]) {
 
             for (int i = 0; i < platforms.size(); i++) {
                 window.render(platforms[i]); //rendering all platforms 
+            }
+            for(int i = 0; i < stones.size(); i++){
+                window.render(stones[i]);//rendering stones on platforms
             }
 
             // Render the knight after movement
@@ -289,7 +306,7 @@ int main(int argc, char* args[]) {
                 int chance = rand()%6;
                 if(chance<=2){
                     enemies[tofight].decreasehealth(30);
-                    std::cout<<enemies[tofight].gethealth()<<std::endl;
+                    
                 }
                 enemies[tofight].attackKnight(knight);
             }
@@ -299,7 +316,7 @@ int main(int argc, char* args[]) {
                 enemies[tofight].attackKnight(knight);
             }
             
-            knight.setPosition(256,592);
+            knight.setPosition(384,464);
             window.clear();
             window.render(knight);
             window.render(enemies[tofight]);
