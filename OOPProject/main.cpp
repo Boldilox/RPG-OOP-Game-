@@ -24,6 +24,7 @@ Mix_Chunk *stepsound = NULL;
 Mix_Chunk *swordslash = NULL;
 Mix_Chunk *shieldbash = NULL;
 Mix_Chunk *headbutt = NULL;
+Mix_Chunk *miss = NULL;
 
 bool init()
 {
@@ -50,7 +51,7 @@ bool loadMedia()
         swordslash = Mix_LoadWAV("sounds/SwordSlash.mp3");
         shieldbash = Mix_LoadWAV("sounds/ShieldBash.mp3");
         headbutt = Mix_LoadWAV("sounds/Headbutt.mp3");
-
+        miss = Mix_LoadWAV("sounds/missingsound.wav");
 
     if(bgMusic == NULL){
         printf("Unable to load music: %s \n", Mix_GetError());
@@ -60,10 +61,10 @@ bool loadMedia()
     return success;
 }
 
-bool showStartScreen(RenderWindow& window) {
-    SDL_Texture* startScreenTexture = window.loadTexture("res/gfx/startscreen.png");
+bool showStartScreen(RenderWindow& window) { //startscreen shown
+    SDL_Texture* startScreenTexture = window.loadTexture("res/gfx/startscreen.png");//load texture
     bool startGame = false;
-    startscreen start(0,0,startScreenTexture);
+    startscreen start(0,0,startScreenTexture); //make screen
 
     SDL_Event event;
     bool running = true;
@@ -94,7 +95,7 @@ bool showStartScreen(RenderWindow& window) {
     return startGame;
 }
 
-bool Renderwinning(RenderWindow& window){
+bool Renderwinning(RenderWindow& window){//winnig screen will be shown if the won flag is true(similar to start screen code)
     SDL_Texture* wontexture = window.loadTexture("res/gfx/won_screen.png");
     bool wondone = false;
     Won winscreen(0,0,wontexture);
@@ -125,8 +126,8 @@ bool Renderwinning(RenderWindow& window){
     return wondone;
 }
 
-bool RenderLosing(RenderWindow& window){
-    SDL_Texture* losttexture = window.loadTexture("res/gfx/test.png");
+bool RenderLosing(RenderWindow& window){ //Losing screen done here for rendering a differnet losing window(similar to start screen code)
+    SDL_Texture* losttexture = window.loadTexture("res/gfx/LoseScreen.png");
     bool lostdone = false;
     Lost lostscreen(0,0,losttexture);
 
@@ -179,7 +180,7 @@ int main(int argc, char* args[]) {
     }
 
 
-    RenderWindow window("Game", 1280, 720);
+    RenderWindow window("Game", 1280, 720); //making main window here
    
     bool startGame = showStartScreen(window);
 
@@ -268,8 +269,9 @@ int main(int argc, char* args[]) {
     enemies.push_back(wizard);    
     int tofight;
     Uint32 starttime = SDL_GetTicks();
-    Uint32 lastCollisionCheckTime = 0;
-    Uint32 collisionCheckInterval = 2000; // Interval in milliseconds (2 seconds)
+    Uint32 lastCollisionCheckTime = 0;//decalred for last collsion check so we can see 1 second for every iteration of the combat check
+    Uint32 collisionCheckInterval = 1000; // Interval in milliseconds (1 seconds)
+    int chancetofight = 0;
 
     while (gameRunning) {
         SDL_Delay(15);
@@ -297,8 +299,8 @@ int main(int argc, char* args[]) {
                 
                 if (knight.checkenemyspawn(stones)) {
                     
-                    int chancetofight = rand()%10;
-                    if(chancetofight >= 3){
+                    chancetofight = rand()%10;
+                    if(chancetofight >3){
 
                         
                         if (!savedPosition) {
@@ -360,7 +362,7 @@ int main(int argc, char* args[]) {
             }
             knight.change_src(22,0,128,128);
             const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-            if(currentKeyStates[SDL_SCANCODE_UP]){ //best attack technically but low damage
+            if(currentKeyStates[SDL_SCANCODE_L]){ //best attack technically but low damage
                 SDL_Delay(100);
                 int chance = rand()%7;
                 if (chance<=5){ //85% chance attack will land
@@ -368,11 +370,14 @@ int main(int argc, char* args[]) {
                     enemies[tofight].decreasehealth(15);
                     Mix_PlayChannel(-1 , headbutt ,0);
                 }
+                else{
+                    Mix_PlayChannel(-1,miss , 0);
+                }
                 //15% chance you will miss hehe
                 enemies[tofight].attackKnight(knight);
 
             }
-            if(currentKeyStates[SDL_SCANCODE_DOWN]){ //block mechanism for knight
+            if(currentKeyStates[SDL_SCANCODE_J]){ //block mechanism for knight
                 SDL_Delay(100);
                 int checkblock = rand()%6;
                 int currenthealth = knight.gethealth();
@@ -384,33 +389,41 @@ int main(int argc, char* args[]) {
                 } 
                 else if(checkblock>=3){
                     enemies[tofight].attackKnight(knight);
+                    Mix_PlayChannel(-1 , miss ,0);
                 }
             }
-            if(currentKeyStates[SDL_SCANCODE_LEFT]){  //50% chance attack but INSANE Damaege
+            if(currentKeyStates[SDL_SCANCODE_K]){  //50% chance attack but INSANE Damaege
                 SDL_Delay(100);
                 int chance = rand()%6;
                 if(chance<=2){
                     enemies[tofight].decreasehealth(30);
                     Mix_PlayChannel(-1 , shieldbash ,0);
                 }
+                else{
+                    Mix_PlayChannel(-1,miss,0);
+                }
                 enemies[tofight].attackKnight(knight);
             }
-            if(currentKeyStates[SDL_SCANCODE_RIGHT]){ //100% attack hit rate but low damage
+            if(currentKeyStates[SDL_SCANCODE_I]){ //100% attack hit rate but low damage
                 SDL_Delay(100);
                 enemies[tofight].decreasehealth(7);
                 Mix_PlayChannel(-1,swordslash ,0);
                 enemies[tofight].attackKnight(knight);
             }
             
-            knight.setPosition(384,464);
+            knight.setPosition(384,508); //set kight position to deafult fight
             window.clear();
+            
+            window.render(Background);
             window.render(knight);
             window.render(moveset);
+            
             window.render(enemies[tofight]);
             window.display();
             
             if(enemies[tofight].gethealth()<=0){
                 isInCombat = false;
+                chancetofight = 0;
                 knight.setPosition(savedKnightX,savedKnightY);
                 savedPosition = false;
             }
