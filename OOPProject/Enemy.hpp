@@ -15,5 +15,6 @@ class Enemy : public Entity {
     virtual ~Enemy(){};
     virtual void decreasehealth(int dmg);
     virtual int gethealth();
+    virtual void sethealth(int x);
 
 };
