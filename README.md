@@ -1,4 +1,4 @@
-# RPG-OOP-Game: A Turn-Based Adventure
+# RPG-OOP-Game: Cavern Crusade
 
 # Project Overview
 - Title: Turn-Based RPG Game Development
@@ -12,12 +12,13 @@ This project is an ambitious endeavor by three students to create a turn-based R
 In this game, players embark on a journey through a meticulously crafted world, filled with diverse characters, intriguing locations, and compelling quests. The game focuses on strategic turn-based combat, allowing players to tactically engage in battles and make meaningful decisions that influence the outcome of their journey.
 
 # Key Features:
-
+A game which is hard to beat and incorperates your hearing sense as to judge how the tide of battle will go rather than visually telling the user what is going on in combat.
+Enemies of different sort with different power and health points which will be randomn as to which one you fight
+A platformer type game to roam around and reach the end.
 
 # Objectives:
-- Create a captivating RPG world with detailed characters, locations, and quests.
+
 - Implement a turn-based combat system that emphasizes strategic gameplay.
-- Develop a flexible character class system for enhanced player experience.
 - Design an intuitive and engaging user interface.
 - Ensure optimal game performance and a bug-free experience.
 
@@ -26,10 +27,13 @@ In this game, players embark on a journey through a meticulously crafted world, 
 
 
 # Running the Game:
-Use Makefile to copy the commands in the terminal to compile and run the game.
+Use Makefile to copy the commands in the terminal to compile and run the game if you have that capability, or for other people you can copy the run line from the make file and it will run(keep in mind you will have to tell it where your mingw32 folder is with SDL2 installed as the code runs on that).
 
 
 # Refrences: 
+Skeleton Enemy Sprite: 
+https://astrobob.itch.io/animated-pixel-art-skeleton
+
 
 
 
