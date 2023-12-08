@@ -34,3 +34,7 @@ void  Enemy::decreasehealth(int dmg){
 int Enemy::gethealth(){
     return health;
 }
+
+void Enemy::sethealth(int x){
+    health = x;
+}

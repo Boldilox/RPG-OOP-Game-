@@ -347,6 +347,8 @@ int main(int argc, char* args[]) {
             
         }
         else if(isInCombat){
+            Uint32 currenttime = SDL_GetTicks();
+            lastCollisionCheckTime = currenttime; 
             SDL_Delay(30);
             while (SDL_PollEvent(&event)) {
                 if (event.type == SDL_QUIT) {
@@ -424,6 +426,7 @@ int main(int argc, char* args[]) {
             if(enemies[tofight].gethealth()<=0){
                 isInCombat = false;
                 chancetofight = 0;
+                enemies[tofight].sethealth(60);
                 knight.setPosition(savedKnightX,savedKnightY);
                 savedPosition = false;
             }
@@ -446,7 +449,7 @@ int main(int argc, char* args[]) {
     }
 
     if(lost){
-        RenderWindow losingscreen("You Suck",1280,720);
+        RenderWindow losingscreen("Darkness Awaits",1280,720);
         bool lostgame = RenderLosing(losingscreen);
         if(!lostgame){
             losingscreen.cleanUp();
