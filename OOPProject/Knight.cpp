@@ -1,13 +1,28 @@
 // Knight.cpp
 #include "Knight.hpp"
 
-Knight::Knight(float p_x, float p_y, SDL_Texture* p_tex) : Entity(p_x, p_y, p_tex) {
+
+Knight::Knight(float p_x, float p_y, SDL_Texture* p_tex, Mix_Chunk* stepsound) : Entity(p_x, p_y, p_tex),step(stepsound){
+    change_src(22,0,128,128);
     movementSpeed = 5.0f;
     isJumping = false;
     velocityY=0.0f;
     health = 200;
+   
+
 }
 
+void Knight::decreasehealth(int dmg){
+    health -= dmg;
+}
+
+int Knight::gethealth(){
+    return health;
+}
+
+void Knight::sethealth(int h){
+    health = h;
+}
 void Knight::moveLeft(std::vector<Entity>& platforms) {
     // Move the knight left
     x -= movementSpeed;
@@ -16,7 +31,6 @@ void Knight::moveLeft(std::vector<Entity>& platforms) {
         x = 0; // Set the left boundary
     }
     
-
     // Check for collisions with platforms after moving
     for (int i = 0; i < platforms.size(); i++) {
         if (checkCollisionWithPlatform(platforms[i])) {
@@ -24,12 +38,19 @@ void Knight::moveLeft(std::vector<Entity>& platforms) {
             x = platforms[i].getX() + platforms[i].getCurrentFrame().w;
         }
     }
+    if(!isJumping){
+        if (Mix_Playing(-1) == 0) { // Replace -1 with the specific channel number if needed
+            // Play sound when moving left
+            Mix_PlayChannel(-1, step, 0);
+        }
+    }
+    change_src(172 , 0 , 128 ,128);
 }
 
 void Knight::moveRight(std::vector<Entity>& platforms) {
     // Move the knight right
     x += movementSpeed;
-
+    change_src(22,0,128,128);
     // Check and adjust the knight's position if it's out of the screen bounds
     if (x>1216){
         x=1216;
@@ -41,6 +62,13 @@ void Knight::moveRight(std::vector<Entity>& platforms) {
         if (checkCollisionWithPlatform(platforms[i])) {
             // Adjust horizontal position to prevent passing through the platform
             x = platforms[i].getX() - getCurrentFrame().w + 64;
+        }
+    }
+
+    if(!isJumping){
+        if (Mix_Playing(-1) == 0) { // Replace -1 with the specific channel number if needed
+            // Play sound when moving left
+            Mix_PlayChannel(-1, step, 0);
         }
     }
 }
@@ -92,6 +120,9 @@ void Knight::applyGravity(std::vector<Entity>& platforms) {
     }
 }
 
+// void Knight::slash(Enemy& enemy){
+//     enemy.decreasehealth(20);
+// }
 
 bool Knight::checkCollisionWithPlatform(Entity& platform) { //collision is now out of the apply graivty function for further use.
     return (y + getCurrentFrame().h > platform.getY() &&
@@ -99,4 +130,13 @@ bool Knight::checkCollisionWithPlatform(Entity& platform) { //collision is now o
             x + (getCurrentFrame().w - 64) > platform.getX() &&
             x < platform.getX() + platform.getCurrentFrame().w);
             
+}
+
+bool Knight::checkenemyspawn(std::vector<Entity>& platforms){
+    for (int i;i < platforms.size(); i++){
+        if(checkCollisionWithPlatform(platforms[i])){
+            return true;
+        }
+    }
+    return false;
 }

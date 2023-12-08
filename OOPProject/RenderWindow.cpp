@@ -6,6 +6,10 @@
 #include"Entity.hpp"
 #include "startscreen.hpp"
 #include "Won.hpp"
+#include "BG.hpp"
+#include "Lost.hpp"
+#include "Enemy.hpp"
+#include "Moveset.hpp"
 
 RenderWindow::RenderWindow(const char* p_title,int p_w,int p_h):window(NULL),renderer(NULL)
 {
@@ -49,7 +53,7 @@ void RenderWindow::render(Entity& p_entity) {
     dst.y = p_entity.getY();
 
     // Check if the entity is a startscreen
-    if (dynamic_cast<startscreen*>(&p_entity) != nullptr || dynamic_cast<Won*>(&p_entity) != nullptr) {
+    if (dynamic_cast<startscreen*>(&p_entity) != nullptr || dynamic_cast<Won*>(&p_entity) != nullptr || dynamic_cast<BG*>(&p_entity) != nullptr || dynamic_cast<Lost*>(&p_entity) != nullptr ) {
         // Set the dimensions of the start screen image
         src.w = 1280; // Assuming the start screen texture width is 1280
         src.h = 720; // Assuming the start screen texture height is 720
@@ -62,7 +66,14 @@ void RenderWindow::render(Entity& p_entity) {
             dst.w = 64; // Adjust scale factor for the knight
             dst.h = 64;
             dst.y += (128 - dst.h);
-        } else {
+        }
+        else if(dynamic_cast<Moveset*>(&p_entity) != nullptr){
+            src.w = 500;
+            src.h = 500;
+            dst.w = 500;
+            dst.h = 500;
+        } 
+        else {
             dst.w = src.w;
             dst.h = src.h;
         }

@@ -11,8 +11,17 @@ public:
     void clear();
     void render(Entity& p_entity);
     void display();
+    void toggleCombatWindow();
+    void createCombatWindow(int width, int height);
+    bool isCharacterMovementPaused() const { return pauseCharacterMovement; }
+    // Function to clean up combat window
+    void cleanUpCombatWindow();
+    bool pauseCharacterMovement;
+    
 private:
+   
     SDL_Window* window;
     SDL_Renderer* renderer;
+    
 
 };
