@@ -14,8 +14,16 @@
 #include "Skeleton.hpp"
 #include "Moveset.hpp"
 #include <SDL_mixer.h>
+#include <thread>
+#include <chrono>
+
 
 Mix_Music *bgMusic = NULL;
+Mix_Chunk *Block = NULL;
+Mix_Chunk *stepsound = NULL;
+Mix_Chunk *swordslash = NULL;
+Mix_Chunk *shieldbash = NULL;
+Mix_Chunk *headbutt = NULL;
 
 bool init()
 {
@@ -37,6 +45,12 @@ bool loadMedia()
     bool success = true;
         // load the background music
         bgMusic = Mix_LoadMUS( "sounds/DIsc13.mp3" ); 
+        Block = Mix_LoadWAV("sounds/Block.mp3");
+        stepsound = Mix_LoadWAV("sounds/stepsound.wav");
+        swordslash = Mix_LoadWAV("sounds/SwordSlash.mp3");
+        shieldbash = Mix_LoadWAV("sounds/ShieldBash.mp3");
+        headbutt = Mix_LoadWAV("sounds/Headbutt.mp3");
+
 
     if(bgMusic == NULL){
         printf("Unable to load music: %s \n", Mix_GetError());
@@ -53,7 +67,7 @@ bool showStartScreen(RenderWindow& window) {
 
     SDL_Event event;
     bool running = true;
-    Mix_PlayMusic (bgMusic, -1);  // -1 to loop the music indefinitely
+    
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -153,11 +167,20 @@ int main(int argc, char* args[]) {
         std::cout << "IMG_Init has failed. Error" << SDL_GetError() << std::endl;
     }
 
+    if (!init()) {
+        std::cerr << "Initialization failed." << std::endl;
+        return 1;
+    }
+
+    if (!loadMedia()) {
+        std::cerr << "Media loading failed." << std::endl;
+        SDL_Quit();
+        return 1;
+    }
 
 
     RenderWindow window("Game", 1280, 720);
    
-
     bool startGame = showStartScreen(window);
 
     if (!startGame) {
@@ -165,14 +188,17 @@ int main(int argc, char* args[]) {
         SDL_Quit();
         return 0;
     }
-    
+
+    Mix_PlayMusic (bgMusic, -1);  // -1 to loop the music indefinitely
     SDL_Texture* cavegroundTexture = window.loadTexture("res/gfx/ground_cave.png");//caveground txture loading here
-    SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSprite.png");
+    SDL_Texture* knightTexture = window.loadTexture("res/gfx/KnightSpriteSheet.png");
     SDL_Texture* backgroundtexture = window.loadTexture("res/gfx/Background.png");
     SDL_Texture* testtexture = window.loadTexture("res/gfx/test.png");
     SDL_Texture* airplatform = window.loadTexture("res/gfx/airplatform.png"); //texture for platforms to jump to
     SDL_Texture* stonetexture = window.loadTexture("res/gfx/Stones.png"); //stone texture is added here
     SDL_Texture* movesettexture = window.loadTexture("res/gfx/MOVESET.png");
+    
+
 
     std::vector<Entity> platforms;
     int x = 0;
@@ -182,6 +208,7 @@ int main(int argc, char* args[]) {
         platforms.push_back(Entity(x, y, cavegroundTexture)); //ground being made
         x += 128;
     }
+
     platforms.push_back(Entity(266,464,airplatform));//platforms to jump on
     platforms.push_back(Entity(0,400,airplatform));
     platforms.push_back(Entity(280,272,airplatform));
@@ -208,7 +235,7 @@ int main(int argc, char* args[]) {
     BG Background(0,0,backgroundtexture);
     BG test(0,0,testtexture);
     // Create the knight object
-    Knight knight(0, 0, knightTexture); // Initial position (0, 0) - adjust as needed
+    Knight knight(0, 0, knightTexture,stepsound); // Initial position (0, 0) - adjust as needed
     
 
     // Assuming the knight spawns on the left side of the first platform
@@ -240,9 +267,16 @@ int main(int argc, char* args[]) {
     enemies.push_back(skeleton);
     enemies.push_back(wizard);    
     int tofight;
+    Uint32 starttime = SDL_GetTicks();
+    Uint32 lastCollisionCheckTime = 0;
+    Uint32 collisionCheckInterval = 2000; // Interval in milliseconds (2 seconds)
 
     while (gameRunning) {
         SDL_Delay(15);
+        Uint32 currenttime = SDL_GetTicks();
+        
+        
+        
         if(!isInCombat){
             while (SDL_PollEvent(&event)) {
                 if (event.type == SDL_QUIT) {
@@ -258,13 +292,15 @@ int main(int argc, char* args[]) {
 
             const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
             
-            
+            if (currenttime - lastCollisionCheckTime >= collisionCheckInterval){
+                lastCollisionCheckTime = currenttime; 
+                
                 if (knight.checkenemyspawn(stones)) {
                     
                     int chancetofight = rand()%10;
-                    if(chancetofight >= 7){
+                    if(chancetofight >= 3){
 
-                    
+                        
                         if (!savedPosition) {
                             // Save knight's position only if it's not already saved
                             savedKnightX = knight.getX();
@@ -273,23 +309,25 @@ int main(int argc, char* args[]) {
                         }
                         isInCombat = !isInCombat; // Toggle combat mode
                         tofight = rand()%2;
+                        
                     }
 
                 }
-            
+            }
             if (currentKeyStates[SDL_SCANCODE_A]) {
                 knight.moveLeft(platforms); // Move the knight left based implementation
+               
             }
             if (currentKeyStates[SDL_SCANCODE_D]) {
                 knight.moveRight(platforms); // Move the knight right based implementation
             }
             if (currentKeyStates[SDL_SCANCODE_W]){
                 knight.jump();
+                
             }
             
             knight.applyGravity(platforms);
             
-
             window.clear();
             window.render(Background);
 
@@ -320,12 +358,15 @@ int main(int argc, char* args[]) {
                     savedPosition = false;
                 }
             }
+            knight.change_src(22,0,128,128);
             const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
             if(currentKeyStates[SDL_SCANCODE_UP]){ //best attack technically but low damage
                 SDL_Delay(100);
                 int chance = rand()%7;
                 if (chance<=5){ //85% chance attack will land
+
                     enemies[tofight].decreasehealth(15);
+                    Mix_PlayChannel(-1 , headbutt ,0);
                 }
                 //15% chance you will miss hehe
                 enemies[tofight].attackKnight(knight);
@@ -339,6 +380,7 @@ int main(int argc, char* args[]) {
                 if (checkblock <= 3){
                     enemies[tofight].attackKnight(knight);
                     knight.sethealth(currenthealth);
+                    Mix_PlayChannel(-1 ,Block, 0);
                 } 
                 else if(checkblock>=3){
                     enemies[tofight].attackKnight(knight);
@@ -349,13 +391,14 @@ int main(int argc, char* args[]) {
                 int chance = rand()%6;
                 if(chance<=2){
                     enemies[tofight].decreasehealth(30);
-                    
+                    Mix_PlayChannel(-1 , shieldbash ,0);
                 }
                 enemies[tofight].attackKnight(knight);
             }
             if(currentKeyStates[SDL_SCANCODE_RIGHT]){ //100% attack hit rate but low damage
                 SDL_Delay(100);
                 enemies[tofight].decreasehealth(7);
+                Mix_PlayChannel(-1,swordslash ,0);
                 enemies[tofight].attackKnight(knight);
             }
             
@@ -375,7 +418,6 @@ int main(int argc, char* args[]) {
         }
         
     }
-    
 
     window.cleanUp();
     SDL_Quit();

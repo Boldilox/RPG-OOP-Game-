@@ -25,3 +25,11 @@ SDL_Texture* Entity::getTex(){
 SDL_Rect Entity::getCurrentFrame(){
     return currentFrame;
 }
+
+void Entity::change_src(float _x, float _y, float width, float height) {
+    currentFrame.x = _x;
+    currentFrame.y = _y;
+    currentFrame.w = width;
+    currentFrame.h = height;
+}
+
