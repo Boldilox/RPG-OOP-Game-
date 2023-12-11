@@ -1,0 +1,6 @@
+updated knightspritesheet.
+added takingdamage sprite
+taking dmg sprite stays for 0.5 secs then returns
+also dropped the .psd file to make any changes to the knightsprite sheet
+damage sprite starts at  322, 0 
+damage sprite ends at    450, 0
