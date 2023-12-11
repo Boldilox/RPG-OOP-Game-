@@ -8,12 +8,18 @@ Knight::Knight(float p_x, float p_y, SDL_Texture* p_tex, Mix_Chunk* stepsound) :
     isJumping = false;
     velocityY=0.0f;
     health = 200;
+    isTakingDamage = false;
+    damageAnimationTime = 0.0f;
    
 
 }
 
 void Knight::decreasehealth(int dmg){
     health -= dmg;
+    isTakingDamage = true;
+    damageAnimationTime = 0.0f; // Reset animation timer
+    // Set the initial frame for damage animation
+    change_src(322,0,128,128); //DAMAGE SPRITE COORDS COME HERE
 }
 
 int Knight::gethealth(){

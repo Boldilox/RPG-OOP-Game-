@@ -23,6 +23,9 @@ public:
     // void slash(Enemy& enemy);
     
 private:
+    bool isTakingDamage;
+    float damageAnimationTime;
+    bool isCriticalHealth;//
     
     Mix_Chunk* step;
     float movementSpeed;
