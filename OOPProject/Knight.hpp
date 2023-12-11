@@ -9,6 +9,7 @@
 
 class Knight : public Entity {
 public:
+    void update(float deltaTime);//to update current changes to knight.
     Knight(float p_x, float p_y, SDL_Texture* p_tex,Mix_Chunk* stepsound);
     void moveLeft(std::vector<Entity>& platforms);
     void moveRight(std::vector<Entity>& platforms);
@@ -19,14 +20,13 @@ public:
     int gethealth(); 
     void sethealth(int h);
     bool checkenemyspawn(std::vector<Entity>& platforms);
-
     // void slash(Enemy& enemy);
     
 private:
     bool isTakingDamage;
     float damageAnimationTime;
     bool isCriticalHealth;//
-    
+
     Mix_Chunk* step;
     float movementSpeed;
     float velocityY; //will help in jump function for the knight

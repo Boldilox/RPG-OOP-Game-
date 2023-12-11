@@ -10,7 +10,6 @@ Knight::Knight(float p_x, float p_y, SDL_Texture* p_tex, Mix_Chunk* stepsound) :
     health = 200;
     isTakingDamage = false;
     damageAnimationTime = 0.0f;
-   
 
 }
 
@@ -145,4 +144,22 @@ bool Knight::checkenemyspawn(std::vector<Entity>& platforms){
         }
     }
     return false;
+}
+void Knight::update(float deltaTime) //UPDATE function to process live updates to knight. can add other modifications here
+{ // current mods: dmg style 
+    // color intensity
+    int MAX_HEALTH = 200;
+    float healthPercentage = static_cast<float>(health) / MAX_HEALTH; // MAX_HEALTH is 200 here
+                                    //set health threshold here
+    if (healthPercentage <= 0.5f) {//0.5 = 50% health threshold for color change
+      
+        int redIntensity = static_cast<int>(200 * (0.5f - healthPercentage) * 2);
+
+        
+        SDL_SetTextureColorMod(tex, 255, 255 - redIntensity, 255 - redIntensity);
+    } else {
+        
+        SDL_SetTextureColorMod(tex, 255, 255, 255);
+    }
+    
 }

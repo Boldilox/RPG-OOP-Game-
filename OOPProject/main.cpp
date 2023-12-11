@@ -159,7 +159,7 @@ bool RenderLosing(RenderWindow& window){ //Losing screen done here for rendering
 
 
 int main(int argc, char* args[]) {
-   
+    Uint32 lastFrameTime = SDL_GetTicks();
     if (SDL_Init(SDL_INIT_VIDEO) > 0) {
         std::cout << "Hey..SDL_Init has failed. SDL ERROR: " << SDL_GetError() << std::endl;
     }
@@ -277,8 +277,9 @@ int main(int argc, char* args[]) {
         SDL_Delay(15);
         Uint32 currenttime = SDL_GetTicks();
         
-        
-        
+        float deltaTime = (currenttime - lastFrameTime) / 1000.0f; // DMG STUFF HERE
+        lastFrameTime = currenttime;
+        knight.update(deltaTime);//update called here
         if(!isInCombat){
             while (SDL_PollEvent(&event)) {
                 if (event.type == SDL_QUIT) {
@@ -419,7 +420,6 @@ int main(int argc, char* args[]) {
             window.render(Background);
             window.render(knight);
             window.render(moveset);
-            
             window.render(enemies[tofight]);
             window.display();
             
