@@ -369,9 +369,12 @@ int main(int argc, char* args[]) {
                 SDL_Delay(100);
                 int chance = rand()%7;
                 if (chance<=5){ //85% chance attack will land
-
+                    
                     enemies[tofight].decreasehealth(15);
                     Mix_PlayChannel(-1 , headbutt ,0);
+                    SDL_SetTextureColorMod(tex, 255, 255 - 50, 255 - 50);
+                    SDL_Delay(100);
+                    SDL_SetTextureColorMod(tex, 255, 255, 255)
                 }
                 else{
                     Mix_PlayChannel(-1,miss , 0);
@@ -401,6 +404,9 @@ int main(int argc, char* args[]) {
                 if(chance<=2){
                     enemies[tofight].decreasehealth(30);
                     Mix_PlayChannel(-1 , shieldbash ,0);
+                    SDL_SetTextureColorMod(tex, 255, 255 - 50, 255 - 50);
+                    SDL_Delay(100);
+                    SDL_SetTextureColorMod(tex, 255, 255, 255)
                 }
                 else{
                     Mix_PlayChannel(-1,miss,0);
@@ -412,6 +418,9 @@ int main(int argc, char* args[]) {
                 enemies[tofight].decreasehealth(7);
                 Mix_PlayChannel(-1,swordslash ,0);
                 enemies[tofight].attackKnight(knight);
+                SDL_SetTextureColorMod(tex, 255, 255 - 50, 255 - 50);
+                    SDL_Delay(100);
+                    SDL_SetTextureColorMod(tex, 255, 255, 255)
             }
             
             knight.setPosition(384,508); //set kight position to deafult fight
